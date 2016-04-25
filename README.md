@@ -7,6 +7,11 @@
     ----------------------------------------------------------------- 
 
 
+Required Meteor plugins:
+```
+$ meteor add http
+$ meteor add d3
+```
 Welcome to your Meteor project on Cloud9 IDE!
 
 To run your new app open your terminal and type:

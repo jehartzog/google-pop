@@ -30,31 +30,31 @@ function doSearch(searchText) {
         }
     };
 
-    Meteor.http.get("https://www.googleapis.com/customsearch/v1", options, function(error, response) {
-        if (error) {
-            throw error;
-        }
+    let response = Meteor.http.get("https://www.googleapis.com/customsearch/v1", options);
+    RawSearchResults.insert(JSON.stringify(response));
+    return response;
+}
 
+function processSearch() {
+    let results = {};
+    SearchTerms.forEach(searchText => {
+        let response = doSearch(searchText);
         let totalResults = response.data.searchInformation.totalResults;
-
-        SearchResults.insert({
-            search: searchText,
-            totalResults: totalResults,
-            date: new Date()
-        });
-
-        RawSearchResults.insert(JSON.stringify(response));
+        results[searchText] = totalResults;
     });
+
+    results.date = new Date();
+    SearchResults.insert(results);
 }
 
 Meteor.startup(function() {
-    Meteor.setInterval(() => {
+    Meteor.setTimeout(() => {
         if (!searchAlreadyDone()) {
             console.log('Search not done recently, searching now');
-            SearchTerms.forEach(s => doSearch(s));
+            processSearch();
         }
         else {
             console.log('Search already done recently, back to waiting');
         }
-    }, 100000);
+    }, 1000 * 60 * 60);
 });

@@ -3,33 +3,7 @@
 const SearchResults = new Mongo.Collection("searchresults");
 Template.graph.rendered = function() {
     let data = SearchResults.find({}).fetch();
-
-    /*    var data = [{
-            date: '15-Oct-15',
-            AngularJS: '50',
-            ReactJS: '100'
-        }, {
-            date: '15-Oct-16',
-            AngularJS: '55',
-            ReactJS: '150'
-        }, {
-            date: '15-Oct-17',
-            AngularJS: '75',
-            ReactJS: '170'
-        }, {
-            date: '15-Oct-18',
-            AngularJS: '90',
-            ReactJS: '144'
-        }, {
-            date: '15-Oct-19',
-            AngularJS: '95',
-            ReactJS: '150'
-        }, {
-            date: '15-Oct-20',
-            AngularJS: '80',
-            ReactJS: '152'
-        }];*/
-
+    
     var margin = {
             top: 20,
             right: 20,
@@ -39,8 +13,7 @@ Template.graph.rendered = function() {
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
-    var parseDate = d3.time.format("%y-%b-%d").parse,
-        formatPercent = d3.format(".0%");
+    var formatPercent = d3.format(".0%");
 
     var x = d3.time.scale()
         .range([0, width]);
@@ -82,14 +55,13 @@ Template.graph.rendered = function() {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     color.domain(d3.keys(data[0]).filter(function(key) {
-        return key !== "date";
+        return key !== "date" && key !== "_id";
     }));
 
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
         var sum = 0;
         Object.keys(d).forEach(function(key, index) {
-            if (key !== "date") {
+            if (key !== "date" && key !== "_id") {
                 sum += parseInt(d[key], 10);
             }
         });

@@ -2,6 +2,7 @@
 
 const SearchResults = new Mongo.Collection("searchresults");
 const RawSearchResults = new Mongo.Collection("rawsearchresults");
+
 const SearchTerms = ['angular', 'aurelia', 'react'];
 
 function searchAlreadyDone() {
@@ -48,7 +49,7 @@ function processSearch() {
 }
 
 Meteor.startup(function() {
-    Meteor.setTimeout(() => {
+    Meteor.setInterval(() => {
         if (!searchAlreadyDone()) {
             console.log('Search not done recently, searching now');
             processSearch();
@@ -56,5 +57,5 @@ Meteor.startup(function() {
         else {
             console.log('Search already done recently, back to waiting');
         }
-    }, 1000 * 60 * 60);
+    }, 1000 * 24 * 24);
 });
